@@ -7,13 +7,13 @@ classdef Onda < handle
     %% laser info
     power = 0; % [%], equivalent to current, but easier to use.. SET/GET
     trigFreq = 100; % trigger freq. for internal triggering, SET/GET
-    comPort = 'COM102'; % com port of diode laser (USB Serial Port in Device managr)
+    comPort = 'COM4'; % com port of diode laser (USB Serial Port in Device managr)
     silenceOutput = false;
   end
 
   properties (Constant) % can only be changed here in the def file
     TRIG_LIMIT = [0 100000]; % min and max limits of trigger freq.
-    LASING_POWER = 40; % power in % at which lasing starts, used for warmup
+    LASING_POWER = 35; % power in % at which lasing starts, used for warmup
     ZERO_CURRENT = 20; % [A]
     ZERO_CURRENT_RAW = 537; % (raw value, equal to 20A)
     MAX_CURRENT = 41; %  [A]

@@ -22,8 +22,8 @@ function [] = Warm_Up(Onda, doCoolDown, warmUpTime, maxWarmUpPower)
    % calc steps and current values based on time and nSteps
    if ~doCoolDown % do warm up, i.e. don't do cool down duh
       if (Onda.power >= Onda.maxWarmUpPower-2)
-         fprintf(['[Onda] Laser power (%2.1f%%) already at or above warmUpPower ('...
-            '%2.1f A)!\n'],Onda.power,Onda.maxWarmUpPower);
+         fprintf(['[Onda] Laser power (%2.1f%%) already at warm up power ('...
+            '%2.1f%%)!\n'],Onda.power,Onda.maxWarmUpPower);
          short_warn('[Onda] WarmUp cancled');
          return;
       end
@@ -34,6 +34,7 @@ function [] = Warm_Up(Onda, doCoolDown, warmUpTime, maxWarmUpPower)
       powerSteps = round(powerSteps*10)/10; %round to one digit
       fprintf('[Onda] Warming Up Laser to %2.1f%%\n',Onda.maxWarmUpPower);
       fprintf('[Onda] Laser will go pew pew, and so should you!\n');
+      Onda.trigFreq = 100;
       Onda.Set_Trigger_Source(0); %set to internal trigger mode
       Onda.On();
     else
@@ -42,7 +43,7 @@ function [] = Warm_Up(Onda, doCoolDown, warmUpTime, maxWarmUpPower)
       powerStepSize = Onda.power/nWarmUpSteps;
       powerSteps = Onda.power:-powerStepSize:0;
       powerSteps = round(powerSteps*10)/10; %round to one digit
-      fprintf('[Onda] Cooling down Onda.');
+      fprintf('[Onda] Cooling down Onda.\n');
    end
 
    % prepare workspace waitbar
@@ -77,10 +78,10 @@ function [] = Warm_Up(Onda, doCoolDown, warmUpTime, maxWarmUpPower)
 
    if ~doCoolDown % we warmed up the Onda
       Onda.isWarmedUp = 1;
-      fprintf('[Onda] Laser warm up successful. \n')
+      fprintf('\n[Onda] Laser warm up successful.\n')
    else
       Onda.isWarmedUp = 0;
-      fprintf('[Onda] Laser cool down successful. \n')
+      fprintf('\n[Onda] Laser cool down successful.\n')
    end
 
    Onda.Set_Trigger_Source(1); %set to internal trigger mode
