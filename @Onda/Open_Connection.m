@@ -1,9 +1,11 @@
 % Open_Connection @ Onda
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [] = Open_Connection(Onda)
-   % open serial connection to laser on comPort, creates serial obj
-   % also displays laser status
+function [] = Open_Connection(Onda, comPort)
+  Onda.comPort = comPort;
+
+  % open serial connection to laser on comPort, creates serial obj
+  % also displays laser status
   fprintf(Onda.outTarget,'[Onda] Openning serial connection...');
 
   Onda.SerialObj = instrfind('Type', 'serial', 'Port', Onda.comPort);
