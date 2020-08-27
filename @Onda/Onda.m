@@ -8,6 +8,7 @@ classdef Onda < BaseHardwareClass
     trigFreq = 100; % trigger freq. for internal triggering, SET/GET
     comPort = 'COM4'; % com port of diode laser (USB Serial Port in Device managr)
     classId = '[Laser]'; % used for Obj.VPrintF_With_ID_W   
+    trigMode; % 0 = internal, 1 = external, 2 = CW. SET/GET
   end
 
   properties (Constant) % can only be changed here in the def file
@@ -38,7 +39,6 @@ classdef Onda < BaseHardwareClass
     current; % [A], diode laser current, only readable, laser power set in percent
     emission; % is laser emission on/off?
     aimBeam; % is aim beam on/off?
-    trigMode; % 0 = internal, 1 = external, 2 = CW. SET/GET
     pdSignal; % not sure what this even is...
     SerialObj = []; % serial port object, required for Matlab to laser comm.
     isConnected = 0; % Connection stored as logical
