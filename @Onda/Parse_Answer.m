@@ -1,4 +1,4 @@
-function [D,H,comError] = Parse_Answer(Onda,rawCharAnswer,verboseOut)
+function [D,H,comError] = Parse_Answer(Obj,rawCharAnswer,verboseOut)
 
   if nargin < 3
     verboseOut = 0;
@@ -6,14 +6,14 @@ function [D,H,comError] = Parse_Answer(Onda,rawCharAnswer,verboseOut)
 
   % rawCharAnswer format:
   % header p1 p2 p3 checksum
-  Onda.comError = false;
+  Obj.comError = false;
   returnChar = char(13);
   if strcmp(rawCharAnswer(end),returnChar)
     rawCharAnswer = rawCharAnswer(1:end-1); % crop away CR character
   else
-    Onda.comError = true;
-    Onda.errorStatus = 'ComError: No termination (CR) found!';
-    short_warn(Onda.errorStatus);
+    Obj.comError = true;
+    Obj.errorStatus = 'ComError: No termination (CR) found!';
+    short_warn(Obj.errorStatus);
     return;
   end
 
@@ -25,8 +25,8 @@ function [D,H,comError] = Parse_Answer(Onda,rawCharAnswer,verboseOut)
   H.checkSum = rawCharAnswer(9:10);
 
   if verboseOut
-    fprintf(Onda.outTarget,'rawAnswer: %s\n',rawCharAnswer);
-    fprintf(Onda.outTarget,'h=%sh\tp1=%sh\tp2=%sh\tp3=%sh\tCS=%sh\n',...
+    fprintf(Obj.outTarget,'rawAnswer: %s\n',rawCharAnswer);
+    fprintf(Obj.outTarget,'h=%sh\tp1=%sh\tp2=%sh\tp3=%sh\tCS=%sh\n',...
       H.header,H.p1,H.p2,H.p3,H.checkSum);
   end
 
@@ -38,19 +38,19 @@ function [D,H,comError] = Parse_Answer(Onda,rawCharAnswer,verboseOut)
   D.checkSum = hex2dec(H.checkSum);
 
   if verboseOut
-    fprintf(Onda.outTarget,'h=%2.0f\tp1=%2.0f\tp2=%2.0f\tp3=%2.0f\tCS=%2.0f\n',...
+    fprintf(Obj.outTarget,'h=%2.0f\tp1=%2.0f\tp2=%2.0f\tp3=%2.0f\tCS=%2.0f\n',...
       D.header,D.p1,D.p2,D.p3,D.checkSum);
   end
 
   % check for correct checkSum
-  Onda.hexAnswer = [H.header H.p1 H.p2 H.p3];
-  commandSum = Onda.Get_Hex_Checksum(Onda.hexAnswer);
+  Obj.hexAnswer = [H.header H.p1 H.p2 H.p3];
+  commandSum = Obj.Get_Hex_Checksum(Obj.hexAnswer);
   if ~strcmp(commandSum,H.checkSum)
-    Onda.comError = true;
-    Onda.errorStatus = 'ComError: Check sum error in recieved answer!';
-    short_warn(Onda.errorStatus);
+    Obj.comError = true;
+    Obj.errorStatus = 'ComError: Check sum error in recieved answer!';
+    short_warn(Obj.errorStatus);
   end
   % store the raw answers for error checking, processing and debugging
-  Onda.D = D;
-  Onda.H = H;
+  Obj.D = D;
+  Obj.H = H;
 end

@@ -8,87 +8,67 @@
 
 % is located, kinda like include in C...
 
-function [] = Warm_Up(Onda, doCoolDown, warmUpTime, maxWarmUpPower)
+function [] = Warm_Up(Obj, doCoolDown, warmUpTime, maxWarmUpPower)
 
    if nargin > 2 % replace default warum up values
-      Onda.warmUpTime = warmUpTime;  % warmUpTime [min]
-      Onda.maxWarmUpPower = maxWarmUpPower; % [A]
+      Obj.warmUpTime = warmUpTime;  % warmUpTime [min]
+      Obj.maxWarmUpPower = maxWarmUpPower; % [A]
    elseif nargin <= 1
       doCoolDown = 0; % don't cool down per default
    end
 
-   Onda.Update_Status(0); %make sure all is good before warming up
+   Obj.Update_Status(0); %make sure all is good before warming up
 
    % calc steps and current values based on time and nSteps
    if ~doCoolDown % do warm up, i.e. don't do cool down duh
-      if (Onda.power >= Onda.maxWarmUpPower-2)
+      if (Obj.power >= Obj.maxWarmUpPower-2)
          fprintf(['[Onda] Laser power (%2.1f%%) already at warm up power ('...
-            '%2.1f%%)!\n'],Onda.power,Onda.maxWarmUpPower);
-         short_warn('[Onda] WarmUp cancled');
+            '%2.1f%%)!\n'],Obj.power,Obj.maxWarmUpPower);
+         short_warn('   WarmUp cancled');
          return;
       end
-      nWarmUpSteps = Onda.warmUpTime/Onda.WARM_UP_INTERVAL;
-      powerStepSize = Onda.maxWarmUpPower/nWarmUpSteps;
+      nWarmUpSteps = Obj.warmUpTime/Obj.WARM_UP_INTERVAL;
+      powerStepSize = Obj.maxWarmUpPower/nWarmUpSteps;
       % warm up from present current setting in Onda
-      powerSteps = Onda.power:powerStepSize:Onda.maxWarmUpPower;
+      powerSteps = Obj.power:powerStepSize:Obj.maxWarmUpPower;
       powerSteps = round(powerSteps*10)/10; %round to one digit
-      fprintf('[Onda] Warming Up Laser to %2.1f%%\n',Onda.maxWarmUpPower);
-      fprintf('[Onda] Laser will go pew pew, and so should you!\n');
-      Onda.trigFreq = 100;
-      Onda.Set_Trigger_Source(0); %set to internal trigger mode
-      Onda.On();
+      infoStr = sprintf('   Warming Up Laser to %2.1f%%\n',Obj.maxWarmUpPower);
+      Obj.VPrintF_With_ID(infoStr);
+      Obj.trigFreq = 200;
+      Obj.Set_Trigger_Source(0); %set to internal trigger mode
+      Obj.On();
     else
-      % cool down can be faster, given by Onda.CoolDownFactor
-      nWarmUpSteps = Onda.warmUpTime/Onda.WARM_UP_INTERVAL;
-      powerStepSize = Onda.power/nWarmUpSteps;
-      powerSteps = Onda.power:-powerStepSize:0;
+      % cool down can be faster, given by Obj.CoolDownFactor
+      nWarmUpSteps = Obj.warmUpTime/Obj.WARM_UP_INTERVAL;
+      powerStepSize = Obj.power/nWarmUpSteps;
+      powerSteps = Obj.power:-powerStepSize:0;
       powerSteps = round(powerSteps*10)/10; %round to one digit
-      fprintf('[Onda] Cooling down Onda.\n');
+      Obj.VPrintF_With_ID('Cooling down...\n');
    end
 
-   % prepare workspace waitbar
-   cpb = ConsoleProgressBar();
-   cpb.setLeftMargin(0);
-   cpb.setTopMargin(0);
-   cpb.setLength(30);
-   cpb.setMinimum(1);
-   cpb.setMaximum(length(powerSteps));
-   cpb.setElapsedTimeVisible(1);
-   cpb.setRemainedTimeVisible(1);
-   cpb.setElapsedTimePosition('left');
-   cpb.setRemainedTimePosition('right');
-   cpb.start();
-   % start while loop that steps up/down the Onda current
+   progressbar('Laser warm up'); % Init single bar
    iStep = 1;
-   tic;
+   lastUpdate = tic;
 
    while (iStep <= length(powerSteps))
      % set new Onda current if WARM_UP_INTERVAL passed
-     if (toc > Onda.WARM_UP_INTERVAL)
+     if (toc(lastUpdate) > Obj.WARM_UP_INTERVAL)
         currentPower = powerSteps(iStep); % only read once
-        Onda.power = currentPower;
-        dispText = sprintf('%2.1f%%/%2.1f%%',currentPower, Onda.maxWarmUpPower);
-        cpb.setValue(iStep);
-        cpb.setText(dispText);
-        tic;
+        Obj.power = currentPower;
+        progressbar(iStep./numel(powerSteps));
         iStep = iStep + 1;
+        lastUpdate = tic;
      end
    end
-   cpb.stop();
+   progressbar(1);
 
    if ~doCoolDown % we warmed up the Onda
-      Onda.isWarmedUp = 1;
-      fprintf('\n[Onda] Laser warm up successful.\n')
+      Obj.isWarmedUp = 1;
+      Obj.VPrintF_With_ID('Laser warm up successful.\n')
    else
-      Onda.isWarmedUp = 0;
-      fprintf('\n[Onda] Laser cool down successful.\n')
+      Obj.isWarmedUp = 0;
+      Obj.VPrintF_With_ID('Laser cool down successful.\n')
    end
 
-   Onda.Set_Trigger_Source(1); %set to internal trigger mode
-
-   % play a fun sound
-   load gong.mat;
-   y = y(3000:30000);
-   sound([y;y;y], 10*Fs);
-   clear Fs y;
+   Obj.Set_Trigger_Source(1); %set to internal trigger mode
 end

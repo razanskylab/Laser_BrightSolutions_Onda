@@ -1,7 +1,7 @@
-function [] = Close_Connection(Onda)
+function [] = Close_Connection(Obj)
    % close serial connection to Onda, delete SerialObj
-   fclose(Onda.SerialObj);  % always, always want to close serial connection
-   delete(Onda.SerialObj);
-   fprintf(Onda.outTarget,'[Onda] Connection closed.\n');
-   Onda.SerialObj = [];
+   fclose(Obj.SerialObj);  % always, always want to close serial connection
+   delete(Obj.SerialObj);
+   Obj.VPrintF_With_ID('Connection closed.\n');
+   Obj.SerialObj = [];
 end

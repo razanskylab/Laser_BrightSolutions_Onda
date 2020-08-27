@@ -1,7 +1,7 @@
 clear all; rehash path;
 O = Onda;
 O.Update_Status();
-O.silenceOutput = true; % enable / disable output to workspace
+O.verboseOutput = true; % enable / disable output to workspace
 
 O.On; % enable emission
 O.Off; % disable emission

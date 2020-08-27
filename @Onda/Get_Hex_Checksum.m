@@ -1,4 +1,4 @@
-function [hexCheckSum,decCheckSum] = Get_Hex_Checksum(O,hexStr)
+function [hexCheckSum,decCheckSum] = Get_Hex_Checksum(~,hexStr)
   % also called CheckSum8 Xor?
   % check results at
   % https://www.scadacore.com/tools/programming-calculators/online-checksum-calculator/#

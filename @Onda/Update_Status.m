@@ -1,33 +1,33 @@
 % Update status
-function Update_Status(Onda,printStatus)
+function Update_Status(Obj,printStatus)
   if nargin < 2
     printStatus = 1;
   end
-  fprintf(Onda.outTarget,'[Onda] Updating laser status.\n');
-  Onda.Query_Command('90000000');
+  Obj.VPrintF_With_ID('Updating laser status.\n');
+  Obj.Query_Command('90000000');
   % laser emission status etc
-  Onda.trigMode = bitget(Onda.D.p1,1);
-  Onda.aimBeam = bitget(Onda.D.p1,3);
-  Onda.emission = bitget(Onda.D.p1,4);
+  Obj.trigMode = bitget(Obj.D.p1,1);
+  Obj.aimBeam = bitget(Obj.D.p1,3);
+  Obj.emission = bitget(Obj.D.p1,4);
 
-  Onda.Status.diodeDriverOk = bitget(Onda.D.p2,1); % true when warmed up?
-  Onda.Status.qSwitchOn = bitget(Onda.D.p2,2); % true when power is supplied
-  Onda.Status.ntcOk = bitget(Onda.D.p2,3); % true when power is supplied
-  Onda.Status.warmUpOk = bitget(Onda.D.p2,4); % true when warmed up
-  Onda.Status.systemOk = bitget(Onda.D.p2,5);
-  Onda.Status.laserOn = bitget(Onda.D.p2,6); % same as emission?
-  Onda.Status.interlock = bitget(Onda.D.p2,7);
-  Onda.Status.fiveVolt = bitget(Onda.D.p2,8);
+  Obj.Status.diodeDriverOk = bitget(Obj.D.p2,1); % true when warmed up?
+  Obj.Status.qSwitchOn = bitget(Obj.D.p2,2); % true when power is supplied
+  Obj.Status.ntcOk = bitget(Obj.D.p2,3); % true when power is supplied
+  Obj.Status.warmUpOk = bitget(Obj.D.p2,4); % true when warmed up
+  Obj.Status.systemOk = bitget(Obj.D.p2,5);
+  Obj.Status.laserOn = bitget(Obj.D.p2,6); % same as emission?
+  Obj.Status.interlock = bitget(Obj.D.p2,7);
+  Obj.Status.fiveVolt = bitget(Obj.D.p2,8);
 
-  if ~Onda.Status.systemOk
+  if ~Obj.Status.systemOk
     short_warn('[Onda] Laser system failure! Is the power supply connected?');
-  elseif ~Onda.Status.systemOk && Onda.Status.qSwitchOn
+  elseif ~Obj.Status.systemOk && Obj.Status.qSwitchOn
     short_warn('[Onda] Laser has power but still needs to warm up!');
-  elseif ~Onda.Status.interlock
+  elseif ~Obj.Status.interlock
     short_warn('[Onda] Laser off, need to press big red button!');
   end
 
   if printStatus
-    Onda.Print_Laser_Status(1);
+    Obj.Print_Laser_Status(1);
   end
 end

@@ -1,33 +1,33 @@
 % Update status
-function Print_Laser_Status(Onda,printStatus)
-  fprintf(Onda.outTarget,'[Onda] Laser status summary:\n')
+function Print_Laser_Status(Obj,printStatus)
+  Obj.VPrintF_With_ID('Laser status summary:\n')
 
   if printStatus % print this always as short status
-    if Onda.emission
-      fprintf(Onda.outTarget,'Emission = On | ');
+    if Obj.emission
+      fprintf('   Emission = On | ');
     else
-      fprintf(Onda.outTarget,'Emission = Off | ');
+      fprintf('   Emission = Off | ');
     end
-    if Onda.aimBeam
-      fprintf(Onda.outTarget,'Aim = On | ');
+    if Obj.aimBeam
+      fprintf('   Aim = On | ');
     else
-      fprintf(Onda.outTarget,'Aim = Off | ');
+      fprintf('   Aim = Off | ');
     end
-    if Onda.trigMode
-      fprintf(Onda.outTarget,'Trig = Ext\n');
+    if Obj.trigMode
+      fprintf('   Trig = Ext\n');
     else
-      fprintf(Onda.outTarget,'Trig = Int\n');
+      fprintf('   Trig = Int\n');
     end
   end
 
   if printStatus == 2
-    fprintf(Onda.outTarget,'diodeDriverOk %i\n',Onda.Status.diodeDriverOk)
-    fprintf(Onda.outTarget,'qSwitchOn %i\n',Onda.Status.qSwitchOn);
-    fprintf(Onda.outTarget,'ntcOk %i\n',Onda.Status.ntcOk);
-    fprintf(Onda.outTarget,'warmUpOk %i\n',Onda.Status.warmUpOk);
-    fprintf(Onda.outTarget,'systemOk %i\n',Onda.Status.systemOk);
-    fprintf(Onda.outTarget,'laserOn %i\n',Onda.Status.laserOn);
-    fprintf(Onda.outTarget,'interlock %i\n',Onda.Status.interlock);
-    fprintf(Onda.outTarget,'fiveVolt %i\n',Onda.Status.fiveVolt);
+    fprintf('   diodeDriverOk %i\n',Obj.Status.diodeDriverOk);
+    fprintf('   qSwitchOn %i\n',Obj.Status.qSwitchOn);
+    fprintf('   ntcOk %i\n',Obj.Status.ntcOk);
+    fprintf('   warmUpOk %i\n',Obj.Status.warmUpOk);
+    fprintf('   systemOk %i\n',Obj.Status.systemOk);
+    fprintf('   laserOn %i\n',Obj.Status.laserOn);
+    fprintf('   interlock %i\n',Obj.Status.interlock);
+    fprintf('   fiveVolt %i\n',Obj.Status.fiveVolt);
   end
 end
