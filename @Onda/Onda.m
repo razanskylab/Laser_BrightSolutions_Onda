@@ -30,6 +30,7 @@ classdef Onda < BaseHardwareClass
   end
 
   properties (Dependent) %callulated based on other values
+
   end
 
   properties (GetAccess=private) % can't be seen but can be set by user
@@ -47,6 +48,7 @@ classdef Onda < BaseHardwareClass
     comError = 0; % error during communication
     errorStatus = 'No errors yet...';
     Status; % struct for storing laser status
+    interlockStatus; % true = laser is on, i.e. button is pressed
   end
 
   % can't be seen or set by user, only by methods in this class

@@ -19,6 +19,9 @@ function Update_Status(Obj,printStatus)
   Obj.Status.interlock = bitget(Obj.D.p2,7);
   Obj.Status.fiveVolt = bitget(Obj.D.p2,8);
 
+  % write easier to get variable
+  Obj.interlockStatus = Obj.Status.interlock;
+  
   if ~Obj.Status.systemOk
     short_warn('[Onda] Laser system failure! Is the power supply connected?');
   elseif ~Obj.Status.systemOk && Obj.Status.qSwitchOn
