@@ -32,7 +32,7 @@ function [] = Warm_Up(Obj, doCoolDown, warmUpTime, maxWarmUpPower)
       % warm up from present current setting in Onda
       powerSteps = Obj.power:powerStepSize:Obj.maxWarmUpPower;
       powerSteps = round(powerSteps*10)/10; %round to one digit
-      infoStr = sprintf('   Warming Up Laser to %2.1f%%\n',Obj.maxWarmUpPower);
+      infoStr = sprintf('   Warming Up Laser to %2.1f Per.\n',Obj.maxWarmUpPower);
       Obj.VPrintF_With_ID(infoStr);
       Obj.trigFreq = 200;
       Obj.Set_Trigger_Source(0); %set to internal trigger mode
