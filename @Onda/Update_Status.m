@@ -1,14 +1,24 @@
 % Update status
-function Update_Status(Obj,printStatus)
+function [trigMode, aimBeam, emission] = Update_Status(Obj,printStatus)
   if nargin < 2
     printStatus = 1;
   end
-  Obj.VPrintF_With_ID('Updating laser status.\n');
+  if printStatus
+    Obj.VPrintF_With_ID('Updating laser status.\n');
+  end
   Obj.Query_Command('90000000');
   % laser emission status etc
   Obj.trigMode = bitget(Obj.D.p1,1);
   Obj.aimBeam = bitget(Obj.D.p1,3);
   Obj.emission = bitget(Obj.D.p1,4);
+
+  trigMode = bitget(Obj.D.p1,1);
+  aimBeam = bitget(Obj.D.p1,3);
+  emission = bitget(Obj.D.p1,4);
+
+  Obj.trigMode = trigMode;
+  Obj.aimBeam = aimBeam;
+  Obj.emission = emission;
 
   Obj.Status.diodeDriverOk = bitget(Obj.D.p2,1); % true when warmed up?
   Obj.Status.qSwitchOn = bitget(Obj.D.p2,2); % true when power is supplied

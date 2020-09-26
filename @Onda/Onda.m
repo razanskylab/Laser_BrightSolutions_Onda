@@ -119,10 +119,9 @@ classdef Onda < BaseHardwareClass
     % Emission on
     function On(Obj)
       Obj.VPrintF_With_ID('Switching emission on.\n');
-      Obj.Update_Status(0);
+      Obj.Update_Status(false); % update status from laser, but don't print info
       if ~Obj.Status.interlock
         short_warn('[Onda] Laser not enabled (big red button)?');
-        Obj.Update_Status(0);
         if ~Obj.Status.interlock
           error('[Onda] You need to enable the laser first!');
         else
@@ -130,14 +129,14 @@ classdef Onda < BaseHardwareClass
         end
       end
       Obj.Query_Command('84010000');
-      Obj.emission = 1; % is laser emission on/off?
+      Obj.Update_Status(false); % update status from laser, but don't print info
     end
 
     % Emission off
     function Off(Obj)
       Obj.VPrintF_With_ID('Switching emission off.\n');
       Obj.Query_Command('84000000');
-      Obj.emission = 0; % is laser emission on/off?
+      Obj.Update_Status(false); % update status from laser, but don't print info
     end
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -145,14 +144,14 @@ classdef Onda < BaseHardwareClass
     function Aim_On(Obj)
       Obj.VPrintF_With_ID('Switching aim beam on.\n');
       Obj.Query_Command('86010000');
-      Obj.aimBeam = 1; % is aim beam on/off?
+      Obj.Update_Status(false); % update status from laser, but don't print info
     end
 
     % Aim beam off
     function Aim_Off(Obj)
       Obj.VPrintF_With_ID('Switching aim beam off.\n');
       Obj.Query_Command('86000000');
-      Obj.aimBeam = 0; % is aim beam on/off?
+      Obj.Update_Status(false); % update status from laser, but don't print info
     end
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -234,6 +233,19 @@ classdef Onda < BaseHardwareClass
       raw = hex2dec([Obj.H.p2 Obj.H.p3]);
       infoStr = sprintf('Photodiode signal: %2.0f?? (%2.1f ??)\n',raw,raw./2^10*100);
       Obj.VPrintF_With_ID(infoStr);
+    end
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    function emission = get.emission(Obj)
+      [~, ~, emission] = Obj.Update_Status(false);
+    end
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    function trigMode = get.trigMode(Obj)
+      [trigMode, ~, ~] = Obj.Update_Status(false);
+    end
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    function aimBeam = get.aimBeam(Obj)
+      [~, aimBeam, ~] = Obj.Update_Status(false);
     end
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
