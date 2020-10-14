@@ -21,6 +21,7 @@ function [] = Warm_Up(Obj, doCoolDown, warmUpTime, maxWarmUpPower)
 
    % calc steps and current values based on time and nSteps
    if ~doCoolDown % do warm up, i.e. don't do cool down duh
+      progressbar('Laser warm-up...'); % Init single bar
       if (Obj.power >= Obj.maxWarmUpPower-2)
          fprintf(['[Onda] Laser power (%2.1f%%) already at warm up power ('...
             '%2.1f%%)!\n'],Obj.power,Obj.maxWarmUpPower);
@@ -38,6 +39,7 @@ function [] = Warm_Up(Obj, doCoolDown, warmUpTime, maxWarmUpPower)
       Obj.Set_Trigger_Source(0); %set to internal trigger mode
       Obj.On();
     else
+      progressbar('Laser cool-down...'); % Init single bar
       % cool down can be faster, given by Obj.CoolDownFactor
       nWarmUpSteps = Obj.warmUpTime/Obj.WARM_UP_INTERVAL;
       powerStepSize = Obj.power/nWarmUpSteps;
@@ -46,7 +48,6 @@ function [] = Warm_Up(Obj, doCoolDown, warmUpTime, maxWarmUpPower)
       Obj.VPrintF_With_ID('Cooling down...\n');
    end
 
-   progressbar('Laser warm up'); % Init single bar
    iStep = 1;
    lastUpdate = tic;
 

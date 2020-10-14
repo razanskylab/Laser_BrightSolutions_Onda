@@ -30,7 +30,6 @@ classdef Onda < BaseHardwareClass
   end
 
   properties (Dependent) %callulated based on other values
-
   end
 
   properties (GetAccess=private) % can't be seen but can be set by user
@@ -156,9 +155,6 @@ classdef Onda < BaseHardwareClass
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% Property Set functions are down here...
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %% Must be in this file! Can't be in seperate file in Onda folder
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     function set.power(Obj,setPower)
       if ((setPower > 100) || (setPower < 0)) && ~isinf(setPower)
         short_warn('Laser power must be 0<= power <=100%!');
@@ -182,7 +178,7 @@ classdef Onda < BaseHardwareClass
       p23 = hexVal;
       Obj.Query_Command([h p1 p23]); % cs added automatically
       % check that power was set, also update property
-      powerHex = [Obj.H.p2 Obj.H.p3];
+      powerHex = [Obj.H.p2 Obj.H.p3]; %#ok<*MCSUP>
       Obj.power = 100*hex2dec(powerHex)./maxRange;
       maxAllowError = 0.1; % [in %] 100/1024 ~ 0.1%
       if (setPower-Obj.power) > maxAllowError
@@ -242,6 +238,18 @@ classdef Onda < BaseHardwareClass
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     function trigMode = get.trigMode(Obj)
       [trigMode, ~, ~] = Obj.Update_Status(false);
+    end
+    
+    function set.trigMode(Obj,triggerMode)
+      if triggerMode > 1
+        short_warn('[Onda] Unknown trigger mode. Not sure what to do...')
+      elseif triggerMode == 0
+        Obj.VPrintF_With_ID('Setting trigger source: Internal.\n');
+        Obj.Query_Command('82000000');
+      elseif triggerMode == 1
+        Obj.VPrintF_With_ID('Setting trigger source: External.\n');
+        Obj.Query_Command('82010000');
+      end
     end
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     function aimBeam = get.aimBeam(Obj)
