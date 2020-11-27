@@ -120,14 +120,10 @@ classdef Onda < BaseHardwareClass
       Obj.VPrintF_With_ID('Switching emission on.\n');
       Obj.Update_Status(false); % update status from laser, but don't print info
       if ~Obj.Status.interlock
-        short_warn('[Onda] Laser not enabled (big red button)?');
-        if ~Obj.Status.interlock
-          error('[Onda] You need to enable the laser first!');
-        else
-          Obj.VPrintF_With_ID('Looks ok now, just needed to update the status...\n');
-        end
+        short_warn('[Onda] Laser not enabled!');
+      else
+        Obj.Query_Command('84010000');
       end
-      Obj.Query_Command('84010000');
       Obj.Update_Status(false); % update status from laser, but don't print info
     end
 

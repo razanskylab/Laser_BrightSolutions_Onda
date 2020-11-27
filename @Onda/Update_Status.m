@@ -31,8 +31,6 @@ function [trigMode, aimBeam, emission] = Update_Status(Obj,printStatus)
     short_warn('[Onda] Laser system failure! Is the power supply connected?');
   elseif ~Obj.Status.systemOk && Obj.Status.qSwitchOn
     short_warn('[Onda] Laser has power but still needs to warm up!');
-  elseif ~Obj.Status.interlock
-    short_warn('[Onda] Laser off, need to press big red button!');
   end
 
   if printStatus
