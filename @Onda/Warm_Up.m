@@ -21,13 +21,13 @@ function [] = Warm_Up(Obj, doCoolDown, warmUpTime, maxWarmUpPower)
 
    % calc steps and current values based on time and nSteps
    if ~doCoolDown % do warm up, i.e. don't do cool down duh
-      progressbar('Laser warm-up...'); % Init single bar
       if (Obj.power >= Obj.maxWarmUpPower-2)
          fprintf(['[Onda] Laser power (%2.1f%%) already at warm up power ('...
-            '%2.1f%%)!\n'],Obj.power,Obj.maxWarmUpPower);
+         '%2.1f%%)!\n'],Obj.power,Obj.maxWarmUpPower);
          short_warn('   WarmUp cancled');
          return;
       end
+      progressbar('Laser warm-up...'); % Init single bar
       nWarmUpSteps = Obj.warmUpTime/Obj.WARM_UP_INTERVAL;
       powerStepSize = Obj.maxWarmUpPower/nWarmUpSteps;
       % warm up from present current setting in Onda
