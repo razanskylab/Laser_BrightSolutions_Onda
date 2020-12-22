@@ -2,7 +2,7 @@ classdef Onda < BaseHardwareClass
 
   properties % default properties, probaly most of your data
     warmUpTime = 15; % [s], duration over which laser slowly warms up on start
-    maxWarmUpPower = Onda.LASING_POWER;
+    maxWarmUpPower = 50; % warm up close to point where lasing starts...
     %% laser info
     power = 0; % [%], equivalent to current, but easier to use.. SET/GET
     trigFreq = 100; % trigger freq. for internal triggering, SET/GET
