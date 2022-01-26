@@ -1,8 +1,10 @@
 % Update status
+
 function Update_Status(Onda,printStatus)
   if nargin < 2
     printStatus = 1;
   end
+  
   fprintf(Onda.outTarget,'[Onda] Updating laser status.\n');
   Onda.Query_Command('90000000');
   % laser emission status etc

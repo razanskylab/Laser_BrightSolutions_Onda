@@ -27,6 +27,6 @@ function [] = Open_Connection(Onda, comPort)
   set(Onda.SerialObj, 'RequestToSend', 'off');
 
   fopen(Onda.SerialObj); % Connect to laser
-  fprintf(Onda.outTarget,'done.\n');
+  fprintf(Onda.outTarget,'done!\n');
   Onda.Check_Serial_Connection();
 end

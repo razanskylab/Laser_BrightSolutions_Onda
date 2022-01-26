@@ -1,3 +1,5 @@
+% File: Onda.m @ Onda
+
 classdef Onda < handle
   % Onda laser fun
 
@@ -20,7 +22,7 @@ classdef Onda < handle
     MAX_CURRENT_RAW = 761; %  raw value, read back from laser
   end
 
-  properties (Constant,Hidden=true) % can only be changed here in the def file
+  properties (Constant, Hidden=true) % can only be changed here in the def file
     WARM_UP_INTERVAL = 1; %[s], interval in which laser current is increased
     CONNECT_ON_STARTUP = true;
     BAUD_RATE = 9600;  % BaudRate as bits per second
@@ -59,12 +61,10 @@ classdef Onda < handle
 
   end
 
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   % constructor, desctructor, save obj
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
   methods
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
     % constructor, called when class is created
     function Onda = Onda(doConnect)
       % constructor, called when creating instance of this class
@@ -85,7 +85,6 @@ classdef Onda < handle
       end
     end
 
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Destructor: Mainly used to close the serial connection correctly
     function delete(Onda)
       % Close Serial connection
@@ -96,7 +95,6 @@ classdef Onda < handle
       fprintf(Onda.outTarget,'[Onda] You destroyed me, you monster!\n');
     end
 
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % when saved, hand over only properties stored in saveObj
     function SaveObj = saveobj(Onda)
       % only save public properties of the class if you save it to mat file
@@ -109,12 +107,8 @@ classdef Onda < handle
   end
 
 
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  %% "Standard" methods, i.e. functions which can be called by the user and by
-  % the class itself
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   methods
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
     % Emission on
     function On(Onda)
       fprintf(Onda.outTarget,'[Onda] Switching emission on.\n');
@@ -139,7 +133,6 @@ classdef Onda < handle
       Onda.emission = 0; % is laser emission on/off?
     end
 
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Aim beam on
     function Aim_On(Onda)
       fprintf(Onda.outTarget,'[Onda] Switching aim beam on.\n');
@@ -202,7 +195,6 @@ classdef Onda < handle
       power = 100*hex2dec(powerHex)./maxRange;
     end
 
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     function current = get.current(Onda)
       Onda.Query_Command('92000000');
       current = Onda.D.p1;
@@ -222,20 +214,19 @@ classdef Onda < handle
       else
         current = accuCurrent;
       end
-      fprintf(Onda.outTarget,'[Onda] Laser current: %2.1fA (%2.1f%%)\n',current,rawValPercent*100);
+      % fprintf(Onda.outTarget,'[Onda] Laser current: %2.1fA (%2.1f%%)\n', ...
+      %   current,rawValPercent*100);
     end
     % NOTE no set function for current, laser current is set via power command!
 
-
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     function current = get.pdSignal(Onda)
       Onda.Query_Command('94000000');
+      warning("Unfinished function, be careful using me");
       % FIXME is this relative to 1024 where 1024 is max current???
       raw = hex2dec([Onda.H.p2 Onda.H.p3]);
-      fprintf(Onda.outTarget,'[Onda] Photodiode signal: %2.0f?? (%2.1f%%??)\n',raw,raw./2^10*100);
+      % fprintf(Onda.outTarget,'[Onda] Photodiode signal: %2.0f?? (%2.1f%%??)\n',raw,raw./2^10*100);
     end
 
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     function set.trigFreq(Onda, frequency)
       % set.trigFreq(Onda, frequency)
       % Sets the Pulse Repetition Rate (PRR) to custom values. The PRR [Hz] is a 24 bit
@@ -269,7 +260,6 @@ classdef Onda < handle
       trigFreq = hex2dec([Onda.H.p1 Onda.H.p2 Onda.H.p3]);
     end
 
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     function set.silenceOutput(Onda, doSilence)
       % set.verboseOutput(Onda, verbose)
       % sets the target of fprintf output to either 1 (screen)
@@ -285,11 +275,9 @@ classdef Onda < handle
   end
 
 
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %% Private Methods, can only be called from methods in the class itself
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   methods (Access=private)
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
     function [] = Send_Command(Onda,command)
       if isempty(Onda.SerialObj) || ~strcmp(Onda.SerialObj.Status,'open')
         Onda.D = [];
@@ -304,7 +292,6 @@ classdef Onda < handle
       % for errors
     end
 
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     function Query_Command(Onda,command)
       % Query_Command(Onda,command)
       % Onda laser always replies to commands, so one should always query and
